@@ -1,0 +1,10 @@
+version: 1.0
+provider:
+  name: openfaas
+  gateway: http://40.119.49.149:8080
+functions:
+  register-user:
+    lang: python3
+    handler: ./register-user
+    image: ledgedash/register-user:latest
+
