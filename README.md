@@ -131,3 +131,5 @@ LUA:
 2. `gen-lua/social_network_UserServer.lua`:`UserServiceClient:RegisterUser()`
 Container Service: `user-service` 
 
+# Getting started with OpenFaaS
+https://github.com/openfaas/workshop
