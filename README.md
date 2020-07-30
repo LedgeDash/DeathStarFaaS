@@ -26,9 +26,9 @@ architecture.
 
 **Output**:
 
-**Callee(s)**:
+**Callee services**:
 
-**Service(s) used**:
+**Storage used**:
 
 **Descriptions**:
 
@@ -97,13 +97,11 @@ and receiving the RPC results. Once the RPC call finishes,
 `/api/user/register.lua` returns different HTTP status codes to clients and
 possibly redirects to different pages based on the RPC results.
 
-The backend microservices don't seem to call each other directly. When performing an
-action that involves multiple services, NGINX will create multiple threads, each
-to call a necessary service. For example, to compose a post, NGINX calls
-`UploadCreatorWithUserId()` in `user-service`, `UploadText()` in `text-service`,
-`UploadMedia()` in `media-service` and `UploadUniqueID()` in
+When performing an action that involves multiple services, NGINX will create
+multiple threads, each to call a necessary service. For example, to compose a
+post, NGINX calls `UploadCreatorWithUserId()` in `user-service`, `UploadText()`
+in `text-service`, `UploadMedia()` in `media-service` and `UploadUniqueID()` in
 `unique-id-service`, each in a separate NGINX thread.
-(TODO: need to further verify this is the case for all actions.)
 
 ## Mappings
 
