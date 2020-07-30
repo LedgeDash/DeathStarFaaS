@@ -23,12 +23,16 @@ architecture.
 ### RegisterUser()
 
 **Input**:
+1. `string first_name`
+2. `string last_name`
+3. `string username`
+4. `string password`
 
-**Output**:
+**Output**: success or error code/message
 
-**Callee services**:
+**Callee services**: SocialGraphService:InsertUser()
 
-**Storage used**:
+**Storage used**: MongoDB
 
 **Descriptions**:
 
@@ -55,6 +59,22 @@ architecture.
 ### UploadUrls()
 
 ### UploadUserMentions()
+
+## SocialGraphService
+
+### GetFollowers()
+
+### GetFollowees()
+
+### Follow()
+
+### Unfollow()
+
+### FollowWithUsername()
+
+### UnfollowWithUsername()
+
+### InsertUser()
 
 
 # Mapping DeathStar Actions to Service Functions
