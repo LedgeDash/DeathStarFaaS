@@ -21,10 +21,15 @@ architecture.
 ## UserService
 
 ### RegisterUser()
+
 **Input**:
+
 **Output**:
+
 **Callee(s)**:
+
 **Service(s) used**:
+
 **Descriptions**:
 
 ### RegisterUserWithId()
