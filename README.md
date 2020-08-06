@@ -65,9 +65,54 @@ For more information:
 If you're using a different cloud provider, adapt the config files so that it
 works on your platform. 
 
-### Initializa MongoDB
+### Initialize MongoDB
+
+After all MongoDB pods get into the RUNNING status, we can initialize the
+MongoDB deployment.
+
+Get a shell into one of the mongo pods (we use `mongo-0` here) by `kubectl
+exec`:
+
+```bash
+kubectl exec -it mongo-0 -- mongo
+
+```
+
+This command will run the mongo shell directly.
+
+Once you're inside the mongo shell, initialize the deployment and add all 3 pods
+to the Replica Set (here we're talking about the MongoDB Replica Set not K8S
+ReplicaSet)
+
+
+```bash
+rs.initiate()
+var cfg = rs.conf()
+cfg.members[0].host="mongo-0.mongo:27017"
+rs.reconfig(cfg)
+rs.add("mongo-1.mongo:27017")
+rs.add("mongo-2.mongo:27017")
+```
+
+Check the status to make sure all 3 pods are added and functioning properly by
+`rs.status()`.
 
 ### Namespace and DNS Names
+
+You can deploy MongoDB in any K8S namespace, but accessing the MongoDB within
+the same namespace differs from across namespaces.
+
+Within the same namespace, you can connect to the MongoDB simply through
+`mongodb://mongo` via the service or `mongodb://mongo-0.mongo` via the pod. You
+could also connect to `mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo`.
+
+Across namespace, the domain managed by the Headless Service takes the form:
+`$(service name).$(namespace).svc.cluster.local`, where "cluster.local" is the
+cluster domain.
+
+In our case, all OpenFaaS functions live under the `openfaas-fn` namespace and
+need to access the MongoDB via `mongodb://mongo.default.svc.cluster.local`. They
+can address the pods via for example `mongodb://mongo-0.mongo.default`.
 
 # Supported Actions
 
