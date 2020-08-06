@@ -1,4 +1,5 @@
 import json
+import uuid
 
 def handle(req):
     """handle a request to the function
@@ -19,5 +20,16 @@ def handle(req):
     print(payload['first_name'])
     print(payload['last_name'])
     print(payload['password'])
+
+    user_id = uuid.uuid4()
+
+    print('user_id: {}'.format(user_id))
+
+    import pymongo
+    client = pymongo.mongo_client.MongoClient('mongodb://mongo.default.svc.cluster.local')
+    db = client.test
+
+    print(db.list_collection_names())
+    print(db.houses.find_one())
 
     return req
