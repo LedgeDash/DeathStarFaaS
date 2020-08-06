@@ -3,6 +3,72 @@
 Rewriting the DeathStar Benchmark suite in a Function-as-a-Service (FaaS)
 architecture.
 
+# How to Deploy
+
+The current version of DeathStarFaaS is implemented on top of OpenFaaS
+and Kubernetes. You need a Kubernetes cluster, install on it OpenFaaS and other
+services (e.g., MongoDB) and then install DeathStarFaaS to the OpenFaaS
+deployment.
+
+## Getting started with OpenFaaS
+The current implementation is tested on
+[AKS](https://docs.microsoft.com/en-us/azure/aks/). Follow AKS' guide for
+installing OpenFaaS: https://docs.microsoft.com/en-us/azure/aks/openfaas
+
+To learn more about using OpenFaaS, checkout their
+[workshop](https://github.com/openfaas/workshop).
+
+## Installing DeathStarFaaS
+
+All functions of DeathStarFaaS are specified in the `stack.yml` file. Therefore,
+after logging in to your OpenFaaS deployment through the CLI client
+(`faas-cli`) and navigating to the same directory as the `stack.yml` file, you
+can simply deploy the entire DeathStarFaaS application by
+
+```bash
+faas-cli up
+```
+
+## Deploy MongoDB
+
+### Kubernetes Setup
+DeathStarFaaS uses MongoDB for persistent storage. One option is to deploy a
+MongoDB instance on the same Kubernetes cluster as your OpenFaaS deployment. We
+provide the necessary config files to deploy MongoDB on AKS.
+
+Simply use `kubectl apply` or `kubectl create` to deploy it. This will create
+three things:
+1. A StorageClass resource that dynamically creates a AZure File so that we can
+   later create PersistentVolumeClaims off of it and use them for our MongoDB Pods.
+2. A StatefulSet named "mongo" with 3 replicas. This will create 3 Pods with
+   names `mongo-0`, `mongo-1` and `mongo-2`.
+3. A Headless Service (type: `ClusterIP`) exposing the MongoDB pods to other
+   pods inside the cluster.
+
+We use the cheapest redundancy option for the AZure File in the StorageClass
+resource.
+
+The StatefulSet configuration includes a persistent volume claim off
+of the StorageClass resource (so you don't need to separately create a
+PersistentVolumeClaim resource for the MongoDB pods to use).
+
+For more information:
+1. [Dynamically create persistent volumes with AZure
+   File](https://docs.microsoft.com/en-us/azure/aks/azure-files-dynamic-pv)
+2. [Storage redundancy options for AZure
+   File](https://docs.microsoft.com/en-us/azure/storage/common/storage-redundancy)
+3. [StorageClass resources for AZure
+   File](https://kubernetes.io/docs/concepts/storage/storage-classes/#azure-file)
+4. [K8S
+   StatefulSet](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)
+
+If you're using a different cloud provider, adapt the config files so that it
+works on your platform. 
+
+### Initializa MongoDB
+
+### Namespace and DNS Names
+
 # Supported Actions
 
 1. Register user accounts
@@ -131,5 +197,3 @@ LUA:
 2. `gen-lua/social_network_UserServer.lua`:`UserServiceClient:RegisterUser()`
 Container Service: `user-service` 
 
-# Getting started with OpenFaaS
-https://github.com/openfaas/workshop
