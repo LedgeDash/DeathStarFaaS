@@ -114,6 +114,10 @@ In our case, all OpenFaaS functions live under the `openfaas-fn` namespace and
 need to access the MongoDB via `mongodb://mongo.default.svc.cluster.local`. They
 can address the pods via for example `mongodb://mongo-0.mongo.default`.
 
+More information on:
+1. [DNS name for StatefulSet
+   resources](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#stable-network-id)
+
 # Supported Actions
 
 1. Register user accounts
