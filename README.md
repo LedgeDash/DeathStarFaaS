@@ -75,7 +75,6 @@ exec`:
 
 ```bash
 kubectl exec -it mongo-0 -- mongo
-
 ```
 
 This command will run the mongo shell directly.
@@ -97,6 +96,11 @@ rs.add("mongo-2.mongo:27017")
 Check the status to make sure all 3 pods are added and functioning properly by
 `rs.status()`.
 
+More information on
+1. [Get a shell into a running
+   container (`kubectl exec`)](https://kubernetes.io/docs/tasks/debug-application-cluster/get-shell-running-container/)
+2. MongoDB [Replica Set](https://docs.mongodb.com/manual/tutorial/deploy-replica-set/)
+
 ### Namespace and DNS Names
 
 You can deploy MongoDB in any K8S namespace, but accessing the MongoDB within
@@ -117,6 +121,8 @@ can address the pods via for example `mongodb://mongo-0.mongo.default`.
 More information on:
 1. [DNS name for StatefulSet
    resources](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#stable-network-id)
+
+### Quick Testing of MongoDB
 
 # Supported Actions
 
