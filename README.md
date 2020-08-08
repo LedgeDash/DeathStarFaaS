@@ -118,6 +118,10 @@ In our case, all OpenFaaS functions live under the `openfaas-fn` namespace and
 need to access the MongoDB via `mongodb://mongo.default.svc.cluster.local`. They
 can address the pods via for example `mongodb://mongo-0.mongo.default`.
 
+In the case of multiple MongoDB replicas, `Not master` error might occur if
+accessing via the Headless Service's DNS name. An easy fix is to use the
+master's address, which in the case is `mongodb://mongo-0.mongo.default`.
+
 More information on:
 1. [DNS name for StatefulSet
    resources](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#stable-network-id)
