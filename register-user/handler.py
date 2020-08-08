@@ -6,9 +6,14 @@ import secrets
 import string
 
 def handle(req):
-    """handle a request to the function
+    """create a new user account document in the DB if the username doesn't
+    already exists 
     Args:
-        req (str): request body
+        req (str): A JSON string with 'username', 'first_name', 'last_name'
+        and 'password' as fields
+
+    Code adapted from:
+    DeathStarBench/socialNetwork/src/UserService/UserHandler.h
     """
     payload = json.loads(req)
 
