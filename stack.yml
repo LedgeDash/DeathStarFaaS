@@ -7,4 +7,8 @@ functions:
     lang: python3
     handler: ./register-user
     image: ledgedash/register-user:latest
+  social-graph-insert-user:
+    lang: python3
+    handler: ./social-graph-insert-user
+    image: ledgedash/social-graph-insert-user:latest
 

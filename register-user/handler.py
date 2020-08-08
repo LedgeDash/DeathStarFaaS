@@ -4,6 +4,8 @@ import pymongo
 import hashlib
 import secrets
 import string
+import requests
+import sys
 
 def handle(req):
     """create a new user account document in the DB if the username doesn't
@@ -21,13 +23,13 @@ def handle(req):
        'first_name' not in payload or
        'last_name' not in payload or
        'password' not in payload):
-        return ('Error: Missing input. Make sure the input has `username`, '+
+        sys.exit('Error: missing input. Make sure the input has `username`, '+
                 '`first_name`, `last_name` and `password` fields')
 
-    # TODO: Error handling along the way
     # Connect to MongoDB deployment on the same K8S cluster.
     # We will be using the `users` db and the `users` collection.
     client = pymongo.mongo_client.MongoClient('mongodb://mongo-0.mongo.default')
+    # TODO: Error handling along the way
     db = client.users
     users = db.users
 
@@ -39,9 +41,7 @@ def handle(req):
     new_user_doc = payload
 
     user_id = uuid.uuid4()
-    # we use uuid as the _id field in MongoDB. The original DeathStar uses
-    # a 'user_id' field.
-    new_user_doc['_id'] = user_id
+    new_user_doc['user_id'] = user_id.hex
 
     pwd = new_user_doc['password']
     salt = ''.join(secrets.choice(string.ascii_uppercase + string.digits) for i
@@ -56,3 +56,12 @@ def handle(req):
     print('creating new user account: {}'.format(new_user_doc))
     res = users.insert_one(new_user_doc)
 
+    # call insertUser function in the social graph service
+    req_str = json.dumps({'user_id':new_user_doc['user_id']})
+
+    r = requests.get("http://gateway.openfaas:8080/function/social-graph-insert-user",
+            data=req_str)
+
+    if r.status_code != 200:
+        sys.exit("Error with social-graph-insert-user, expected: %d, got: %d\n"
+                        % (200, r.status_code))
