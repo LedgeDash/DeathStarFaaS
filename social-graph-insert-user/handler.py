@@ -16,6 +16,13 @@ def handle(req):
     db = client.social_graph
     collection = db.social_graph
 
+    # first check that a document with `user_id`=payload['user_id'] doesn't
+    # already exists
+    found = collection.find_one({"user_id": payload['user_id']})
+
+    if found:
+        return('user_id ' + payload['user_id']+' already exist in the social graph')
+
     new_doc = {'user_id':payload['user_id'],
                'followers':[],
                'followees':[]
