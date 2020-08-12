@@ -6,6 +6,7 @@ import secrets
 import string
 import requests
 import sys
+from bson.json_util import dumps
 
 def handle(req):
     """create a new user account document in the DB if the username doesn't
@@ -23,8 +24,9 @@ def handle(req):
        'first_name' not in payload or
        'last_name' not in payload or
        'password' not in payload):
-        sys.exit('Error: missing input. Make sure the input has `username`, '+
-                '`first_name`, `last_name` and `password` fields')
+        msg = 'Make sure the input has `username`, `first_name`, `last_name` and `password` fields'
+        ret = json.dumps({"status":"MissingFieldError", "message":msg})
+        sys.exit(ret)
 
     # Connect to MongoDB deployment on the same K8S cluster.
     # We will be using the `users` db and the `users` collection.
@@ -36,7 +38,8 @@ def handle(req):
     found = users.find_one({"username": payload['username']})
 
     if found:
-        return('username ' + payload['username']+' already exist')
+        sys.exit(json.dumps({"status":"UsernameAlreadyExistError", "message": 'username ' +
+            payload['username']+' already exist'}))
 
     new_user_doc = payload
 
@@ -53,7 +56,7 @@ def handle(req):
     new_user_doc['salt'] = salt
     new_user_doc['password'] = h.hexdigest()
 
-    print('creating new user account: {}'.format(new_user_doc))
+    #print('creating new user account: {}'.format(new_user_doc))
     res = users.insert_one(new_user_doc)
 
     # call insertUser function in the social graph service
@@ -63,5 +66,10 @@ def handle(req):
             data=req_str)
 
     if r.status_code != 200:
-        sys.exit("Error with social-graph-insert-user, expected: %d, got: %d\n"
-                        % (200, r.status_code))
+        sys.exit(json.dumps({"status":"SocialGraphInsertUserError",
+                             "message": "Received: %d".format(r.status_code)}))
+
+    # need to use bson.json_util.dumps because `insert_one(new_user_doc)`
+    # returns the new BSON document inserted into MongoDB which adds a field
+    # '_id' of type ObjectId. Default JSON decoder cannot process ObjectId type.
+    return dumps({"status":"success", "user": new_user_doc})

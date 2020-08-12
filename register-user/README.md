@@ -10,4 +10,9 @@ With `faas-cli` (after login to OpenFaaS cluster)
 cat tests/users.json |faas invoke register-user
 ```
 
+# Inputs
+1. username: string
+2. first_name: string
+3. last_name: string
+4. password: string
 

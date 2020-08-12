@@ -2,7 +2,8 @@ import json
 import pymongo
 
 def handle(req):
-    """handle a request to the function
+    """Given a user_id, create a node in the social graph if it doesn't already
+    exists
     Args:
         req (str): request body
         JSON string with the field of `user_id`
@@ -10,7 +11,7 @@ def handle(req):
 
     payload = json.loads(req)
     if 'user_id' not in payload:
-        return ('Error: missing field `user_id`')
+        sys.exit(json.dumps({"status":"MissingFieldError", "message":"missing field `user_id`"}))
 
     client = pymongo.mongo_client.MongoClient('mongodb://mongo-0.mongo.default')
     db = client.social_graph
@@ -21,7 +22,8 @@ def handle(req):
     found = collection.find_one({"user_id": payload['user_id']})
 
     if found:
-        return('user_id ' + payload['user_id']+' already exist in the social graph')
+        sys.exit(json.dumps({"status":"UserIDAlreadyExistError", "message":
+            'user_id ' + payload['user_id']+' already exist in the social graph'}))
 
     new_doc = {'user_id':payload['user_id'],
                'followers':[],
@@ -29,3 +31,4 @@ def handle(req):
               }
 
     res = collection.insert_one(new_doc)
+    return json.dumps({"status":"success"})

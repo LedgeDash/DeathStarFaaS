@@ -128,6 +128,40 @@ More information on:
 
 ### Quick Testing of MongoDB
 
+# Testing
+
+You can run DeathStarFaaS tests with the pytest framework. Just change directory
+to `/tests` and run `pytest -v`.
+
+For more details, see `/test/README.md`.
+
+# Interface
+
+DeathStarFaas functions return JSON strings.
+
+On success, functions return `{"status": "success", "other_fields": ...}`.
+
+On failures, functions return `{"status": "SomeError", "other_fields": ...}`.
+For example, if a username already exists when registering, `register-user`
+function returns `{"status":"UsernameAlreadyExistError", "message": "username
+... already exists"}`.
+
+See individual function's README for more details.
+
+Moreover, DeathStarFaaS functions return HTTP 200 on success and 500 on error.
+200 code is sent by simply calling `return` in python whereas 500 is sent by
+exiting via `sys.exit()`.
+
+Note that on `sys.exit()`, the OpenFaaS runtime will prefix a string `exit
+status 1\n`. For example, the actually payload of the HTTP response might look
+like:
+```
+s = 'exit status 1\n{"status": "UsernameAlreadyExistError", "message": "username troubledEagle2 already exist"}\n'
+```
+So to get the actual error responses from DeathStarFaaS functions, you need to
+"clean" the response text a bit. See `test/test_main.py:clean_error_msg()` for
+an example.
+
 # Supported Actions
 
 1. Register user accounts

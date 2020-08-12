@@ -12,3 +12,18 @@ functions:
     handler: ./social-graph-insert-user
     image: ledgedash/social-graph-insert-user:latest
 
+  social-graph-follow:
+    lang: python3
+    handler: ./social-graph-follow
+    image: ledgedash/social-graph-follow:latest
+
+  register-user-with-id:
+    lang: python3
+    handler: ./register-user-with-id
+    image: ledgedash/register-user-with-id:latest
+
+  get-user-id:
+    lang: python3
+    handler: ./get-user-id
+    image: ledgedash/get-user-id:latest
+
