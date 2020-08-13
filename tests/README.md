@@ -1,7 +1,8 @@
-Define `OPENFAAS_URL` as an env variable:
+Define `OPENFAAS_URL` as an env variable. For example:
 ```
 export OPENFAAS_URL="http://40.119.49.149:8080"
 ```
+This is also required if you want to use the OpenFaaS client side CLI tool (`faas-cli`)
 
 Install required packages:
 ```
