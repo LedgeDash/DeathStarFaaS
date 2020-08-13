@@ -162,19 +162,6 @@ So to get the actual error responses from DeathStarFaaS functions, you need to
 "clean" the response text a bit. See `test/test_main.py:clean_error_msg()` for
 an example.
 
-# Supported Actions
-
-1. Register user accounts
-2. Upload user information
-3. Login with user credentials (username+password)
-4. Follow a user
-5. Unfollow a user
-6. Read a user's timeline
-7. Create a post with text and optionally media (images or video)
-8. Search for a user
-9. Search for a post
-10. Read a post
-
 # List of DeathStar services and functions
 
 ### UserService
