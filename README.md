@@ -179,62 +179,62 @@ an example.
 
 ## UserService
 
-### RegisterUser()
-
-**Input**:
-1. `string first_name`
-2. `string last_name`
-3. `string username`
-4. `string password`
-
-**Output**: success or error code/message
-
-**Callee services**: SocialGraphService:InsertUser()
-
-**Storage used**: MongoDB
-
-**Descriptions**:
-
-### RegisterUserWithId()
-
-### Login()
-
-### GetUserId()
-
-### UploadCreatorWithUserId()
-
-### UploadCreaterWithUsername()
-
-## ComposePostService
-
-### UploadText()
-
-### UploadMedia()
-
-### UploadUniqueId()
-
-### UploadCreator()
-
-### UploadUrls()
-
-### UploadUserMentions()
+- [x] RegisterUser()
+- [x] RegisterUserWithId()
+- [] Login()
+- [x] GetUserId()
+- [] UploadCreatorWithUserId()
+- [] UploadCreaterWithUsername()
 
 ## SocialGraphService
 
-### GetFollowers()
+- [x] GetFollowers()
+- [x] GetFollowees()
+- [x] Follow()
+- [x] Unfollow()
+- [x] FollowWithUsername()
+- [x] UnfollowWithUsername()
+- [x] InsertUser()
 
-### GetFollowees()
 
-### Follow()
+## ComposePostService
 
-### Unfollow()
+- [] UploadText()
+- [] UploadMedia()
+- [] UploadUniqueId()
+- [] UploadCreator()
+- [] UploadUrls()
+- [] UploadUserMentions()
 
-### FollowWithUsername()
+## UniqueIdService
 
-### UnfollowWithUsername()
+- [] UploadUniqueId()
 
-### InsertUser()
+## TextService
 
+- [] UploadText()
+
+## PostStorageService
+- [] StorePost
+- [] ReadPost
+- [] ReadPosts
+
+## HomeTimelineService
+- [] ReadHomeTimeline
+
+## UserTimelineService
+- [] ReadUserTimeline
+- [] WriteUserTimeline
+
+## UserMentionSerive
+- [] UploadUserMentions
+
+## UrlShortenService
+- [] UploadUrls
+- [] GetExtendedUrls
+
+## MediaService
+- [] UploadMedia
 
 # Mapping DeathStar Actions to Service Functions
 

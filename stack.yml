@@ -27,3 +27,13 @@ functions:
     handler: ./get-user-id
     image: ledgedash/get-user-id:latest
 
+  social-graph-get-followers:
+    lang: python3
+    handler: ./social-graph-get-followers
+    image: ledgedash/social-graph-get-followers:latest
+
+  social-graph-get-followees:
+    lang: python3
+    handler: ./social-graph-get-followees
+    image: ledgedash/social-graph-get-followees:latest
+
