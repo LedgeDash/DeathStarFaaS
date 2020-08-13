@@ -175,18 +175,18 @@ an example.
 9. Search for a post
 10. Read a post
 
-# Services and Functions
+# List of DeathStar services and functions
 
-## UserService
+### UserService
 
 - [x] RegisterUser()
 - [x] RegisterUserWithId()
-- [] Login()
+- [ ] Login()
 - [x] GetUserId()
-- [] UploadCreatorWithUserId()
-- [] UploadCreaterWithUsername()
+- [ ] UploadCreatorWithUserId()
+- [ ] UploadCreaterWithUsername()
 
-## SocialGraphService
+### SocialGraphService
 
 - [x] GetFollowers()
 - [x] GetFollowees()
@@ -197,46 +197,50 @@ an example.
 - [x] InsertUser()
 
 
-## ComposePostService
+### ComposePostService
 
-- [] UploadText()
-- [] UploadMedia()
-- [] UploadUniqueId()
-- [] UploadCreator()
-- [] UploadUrls()
-- [] UploadUserMentions()
+- [ ] UploadText()
+- [ ] UploadMedia()
+- [ ] UploadUniqueId()
+- [ ] UploadCreator()
+- [ ] UploadUrls()
+- [ ] UploadUserMentions()
 
-## UniqueIdService
+### UniqueIdService
 
-- [] UploadUniqueId()
+- [ ] UploadUniqueId()
 
-## TextService
+### TextService
 
-- [] UploadText()
+- [ ] UploadText()
 
-## PostStorageService
-- [] StorePost
-- [] ReadPost
-- [] ReadPosts
+### PostStorageService
 
-## HomeTimelineService
-- [] ReadHomeTimeline
+- [ ] StorePost
+- [ ] ReadPost
+- [ ] ReadPosts
 
-## UserTimelineService
-- [] ReadUserTimeline
-- [] WriteUserTimeline
+### HomeTimelineService
 
-## UserMentionSerive
-- [] UploadUserMentions
+- [ ] ReadHomeTimeline
 
-## UrlShortenService
-- [] UploadUrls
-- [] GetExtendedUrls
+### UserTimelineService
 
-## MediaService
-- [] UploadMedia
+- [ ] ReadUserTimeline
+- [ ] WriteUserTimeline
 
-# Mapping DeathStar Actions to Service Functions
+### UserMentionSerive
+
+- [ ] UploadUserMentions
+
+### UrlShortenService
+
+- [ ] UploadUrls
+- [ ] GetExtendedUrls
+
+### MediaService
+
+- [ ] UploadMedia
 
 ## Overview
 
