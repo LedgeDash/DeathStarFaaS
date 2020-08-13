@@ -38,22 +38,68 @@ def test_register_duplicate():
     assert ret.status_code == 500
     payload = json.loads(clean_error_msg(ret.text))
     assert payload['status'] == 'UsernameAlreadyExistError'
-    print(ret.text)
 
 def test_get_id():
-    '''test get-user-id
+    '''test user_id is added to a user account after registration and that the
+    get-user-id can return the correct user_id
     '''
-    ret = get_user_id("foo")
-    assert ret.status_code == 500
-    
     for account in user_accounts:
         ret = get_user_id(account['username'])
         assert ret.status_code ==200
+
         payload = json.loads(ret.text)
         assert payload['status'] == 'success'
         assert len(payload['user_id'])==32
 
-    
+        # NOTE: This function changes the states of `user_account`. Subsequent
+        # test functions will have access to a `user_id` field for each dict in
+        # `user_accounts` list. This can simplify tests that involve user_id's
+        # (which there are many).
+        account['user_id'] = payload['user_id']
+
+def test_nonexistent_user_id():
+    '''test is given a nonexistent username, get-user-id correctly return error
+    '''
+    ret = get_user_id("foo")
+    assert ret.status_code == 500
+    payload = json.loads(clean_error_msg(ret.text))
+    assert payload['status'] == 'UsernameNotFoundError'
+
+
+def test_get_social_graph_node():
+    '''test if a user account(user_id) is added to the social graph after
+    registration
+    '''
+    for account in user_accounts:
+        ret = get_followers(account['user_id'])
+        assert ret.status_code ==200
+
+        payload = json.loads(ret.text)
+        assert payload['status'] == 'success'
+
+def test_initial_empty_follower_list():
+    '''test that when a node in social graph is first created, its follower list
+    is empty
+    '''
+    for account in user_accounts:
+        ret = get_followers(account['user_id'])
+        assert ret.status_code ==200
+
+        payload = json.loads(ret.text)
+        assert payload['status'] == 'success'
+        assert payload['followers'] == []
+
+def test_initial_empty_followee_list():
+    '''test that when a node in social graph is first created, its followee list
+    is empty
+    '''
+    for account in user_accounts:
+        ret = get_followees(account['user_id'])
+        assert ret.status_code ==200
+
+        payload = json.loads(ret.text)
+        assert payload['status'] == 'success'
+        assert payload['followees'] == []
 
 '''Helper functions
 '''
@@ -66,6 +112,22 @@ def clean_error_msg(s):
     The beginning `exit status 1\n` and the last \n throws off the json encoder.
     '''
     return s.split("\n")[1]
+
+def get_followers(user_id):
+    '''given a user_id, get its followers
+    '''
+    req = json.dumps({"user_id":user_id})
+    r = requests.get(openfaas_url + "/function/social-graph-get-followers",
+            data=req)
+    return r
+
+def get_followees(user_id):
+    '''given a user_id, get its followees
+    '''
+    req = json.dumps({"user_id":user_id})
+    r = requests.get(openfaas_url + "/function/social-graph-get-followees",
+            data=req)
+    return r
 
 def get_user_id(username):
     '''given a username, get its id if exists
