@@ -37,3 +37,18 @@ functions:
     handler: ./social-graph-get-followees
     image: ledgedash/social-graph-get-followees:latest
 
+  social-graph-unfollow:
+    lang: python3
+    handler: ./social-graph-unfollow
+    image: ledgedash/social-graph-unfollow:latest
+
+  social-graph-unfollow-with-username:
+    lang: python3
+    handler: ./social-graph-unfollow-with-username
+    image: ledgedash/social-graph-unfollow-with-username:latest
+
+  social-graph-follow-with-username:
+    lang: python3
+    handler: ./social-graph-follow-with-username
+    image: ledgedash/social-graph-follow-with-username:latest
+

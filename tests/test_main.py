@@ -101,8 +101,166 @@ def test_initial_empty_followee_list():
         assert payload['status'] == 'success'
         assert payload['followees'] == []
 
+def test_follow():
+    '''every element in the `user_accounts` follow the next element in the list
+    and the last element follows everyone
+    '''
+    for i in range(0, len(user_accounts)-1):
+        user_id = user_accounts[i]['user_id']
+        followee_id = user_accounts[i+1]['user_id']
+        ret = follow(user_id, followee_id)
+        assert ret.status_code == 200
+
+    last = user_accounts[len(user_accounts)-1]
+    for i in range(0, len(user_accounts)-1):
+        ret = follow(last['user_id'], user_accounts[i]['user_id'])
+        assert ret.status_code == 200
+
+    for i in range(0, len(user_accounts)-1):
+        follower = user_accounts[i]
+        followee = user_accounts[i+1]
+
+        # check everyone's followees list has the next element
+        ret = get_followees(follower['user_id'])
+        assert ret.status_code == 200
+
+        payload = json.loads(ret.text)
+        assert payload['status'] == 'success'
+        followees_list = payload['followees']
+        #print('user_id: ' + follower['user_id'] + ", followees: " +
+        #        str(followees_list))
+        assert check_user_id_in_list(followee['user_id'], followees_list) == True
+
+        # check everyone's followers list has the previous element
+        ret = get_followers(followee['user_id'])
+        assert ret.status_code == 200
+
+        payload = json.loads(ret.text)
+        assert payload['status'] == 'success'
+        followers_list = payload['followers']
+        assert check_user_id_in_list(follower['user_id'], followers_list) == True
+
+        # check everyone has the last element in its followers list
+        #print('last user_id: {}'.format(last['user_id']))
+        #print('user_id: ' + followee['user_id'] + ", followers: " +
+        #        str(followers_list))
+        if followee != last:
+            assert check_user_id_in_list(last['user_id'], followers_list) == True
+
+    # check the last user has everyone in its followees list
+    last = user_accounts[len(user_accounts)-1]
+    ret = get_followees(last['user_id'])
+    assert ret.status_code == 200
+
+    payload = json.loads(ret.text)
+    assert payload['status'] == 'success'
+    followees_list = payload['followees']
+
+    for i in range(0, len(user_accounts)-1):
+        assert check_user_id_in_list(user_accounts[i]['user_id'], followees_list) == True
+
+def test_unfollow():
+    for i in range(0, len(user_accounts)-1):
+        follower_id = user_accounts[i]['user_id']
+        followee_id = user_accounts[i+1]['user_id']
+        ret = unfollow(follower_id, followee_id)
+        assert ret.status_code == 200
+
+        # check follower's followees list no long has followee_id
+        ret = get_followees(follower_id)
+        assert ret.status_code == 200
+
+        payload = json.loads(ret.text)
+        assert payload['status'] == 'success'
+        followees_list = payload['followees']
+        assert check_user_id_in_list(followee_id, followees_list) == False
+
+        # check followee's followers list no long has follower_id
+        ret = get_followers(followee_id)
+        assert ret.status_code == 200
+
+        payload = json.loads(ret.text)
+        assert payload['status'] == 'success'
+        followers_list = payload['followers']
+        assert check_user_id_in_list(follower_id, followers_list) == False
+
+def test_follow_with_username():
+    '''every element in the `user_accounts` follow the next element in the list
+    '''
+    for i in range(0, len(user_accounts)-1):
+        username = user_accounts[i]['username']
+        followee_name = user_accounts[i+1]['username']
+        ret = follow_with_username(username, followee_name)
+        assert ret.status_code == 200
+
+    for i in range(0, len(user_accounts)-1):
+        follower = user_accounts[i]
+        followee = user_accounts[i+1]
+
+        # check everyone's followees list has the next element
+        ret = get_followees(follower['user_id'])
+        assert ret.status_code == 200
+
+        payload = json.loads(ret.text)
+        assert payload['status'] == 'success'
+        followees_list = payload['followees']
+        #print('user_id: ' + follower['user_id'] + ", followees: " +
+        #        str(followees_list))
+        assert check_user_id_in_list(followee['user_id'], followees_list) == True
+
+        # check everyone's followers list has the previous element
+        ret = get_followers(followee['user_id'])
+        assert ret.status_code == 200
+
+        payload = json.loads(ret.text)
+        assert payload['status'] == 'success'
+        followers_list = payload['followers']
+        assert check_user_id_in_list(follower['user_id'], followers_list) == True
+
+
+
+def test_unfollow_with_username():
+    for i in range(0, len(user_accounts)-1):
+        follower_name = user_accounts[i]['username']
+        followee_name = user_accounts[i+1]['username']
+        follower_id = user_accounts[i]['user_id']
+        followee_id = user_accounts[i+1]['user_id']
+        ret = unfollow_with_username(follower_name, followee_name)
+        assert ret.status_code == 200
+
+        # check follower's followees list no long has followee_id
+        ret = get_followees(follower_id)
+        assert ret.status_code == 200
+
+        payload = json.loads(ret.text)
+        assert payload['status'] == 'success'
+        followees_list = payload['followees']
+        assert check_user_id_in_list(followee_id, followees_list) == False
+
+        # check followee's followers list no long has follower_id
+        ret = get_followers(followee_id)
+        assert ret.status_code == 200
+
+        payload = json.loads(ret.text)
+        assert payload['status'] == 'success'
+        followers_list = payload['followers']
+        assert check_user_id_in_list(follower_id, followers_list) == False
+
+
+
 '''Helper functions
 '''
+def check_user_id_in_list(user_id, l):
+    '''check if a user_id in the followers or followees list
+    followers and followees lists have documents of the format {"user_id":
+    "xxx", "timestamp":1247089}
+    '''
+    for e in l:
+        if e['user_id'] == user_id:
+            return True
+
+    return False
+
 def clean_error_msg(s):
     '''clean OpenFaaS functions' error message for JSON encoder
     When an OpenFaaS function exit on error (i.e., via `sys.exit(..)`), the
@@ -112,6 +270,48 @@ def clean_error_msg(s):
     The beginning `exit status 1\n` and the last \n throws off the json encoder.
     '''
     return s.split("\n")[1]
+
+def unfollow_with_username(username, followee_name):
+    '''user_id unfollow followee_id
+    user_id should be removed from the the `followers` list of followee_id in the
+    social graph. followee_id should be removed from the `followees` list of user_id
+    '''
+    req = json.dumps({"username":username, "followee_name":followee_name})
+    r = requests.get(openfaas_url +
+            "/function/social-graph-unfollow-with-username",
+            data=req)
+    return r
+
+def follow_with_username(username, followee_name):
+    '''user_id follow followee_id
+    user_id should be added to the the `followers` list of followee_id in the
+    social graph. followee_id should be added to the `followees` list of user_id
+    '''
+    req = json.dumps({"username":username, "followee_name":followee_name})
+    r = requests.get(openfaas_url + "/function/social-graph-follow-with-username",
+            data=req)
+    return r
+
+
+def unfollow(user_id, followee_id):
+    '''user_id unfollow followee_id
+    user_id should be removed from the the `followers` list of followee_id in the
+    social graph. followee_id should be removed from the `followees` list of user_id
+    '''
+    req = json.dumps({"user_id":user_id, "followee_id":followee_id})
+    r = requests.get(openfaas_url + "/function/social-graph-unfollow",
+            data=req)
+    return r
+
+def follow(user_id, followee_id):
+    '''user_id follow followee_id
+    user_id should be added to the the `followers` list of followee_id in the
+    social graph. followee_id should be added to the `followees` list of user_id
+    '''
+    req = json.dumps({"user_id":user_id, "followee_id":followee_id})
+    r = requests.get(openfaas_url + "/function/social-graph-follow",
+            data=req)
+    return r
 
 def get_followers(user_id):
     '''given a user_id, get its followers
