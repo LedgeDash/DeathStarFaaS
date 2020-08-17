@@ -170,7 +170,7 @@ an example.
 - [x] RegisterUserWithId()
 - [ ] Login()
 - [x] GetUserId()
-- [ ] UploadCreatorWithUserId()
+- [x] UploadCreatorWithUserId()
 - [ ] UploadCreaterWithUsername()
 
 ### SocialGraphService
@@ -186,20 +186,20 @@ an example.
 
 ### ComposePostService
 
-- [ ] UploadText()
-- [ ] UploadMedia()
-- [ ] UploadUniqueId()
-- [ ] UploadCreator()
-- [ ] UploadUrls()
-- [ ] UploadUserMentions()
+- [x] UploadText()
+- [x] UploadMedia()
+- [x] UploadUniqueId()
+- [x] UploadCreator()
+- [x] UploadUrls()
+- [x] UploadUserMentions()
 
 ### UniqueIdService
 
-- [ ] UploadUniqueId()
+- [x] UploadUniqueId()
 
 ### TextService
 
-- [ ] UploadText()
+- [x] UploadText()
 
 ### PostStorageService
 
@@ -218,16 +218,16 @@ an example.
 
 ### UserMentionSerive
 
-- [ ] UploadUserMentions
+- [x] UploadUserMentions
 
 ### UrlShortenService
 
-- [ ] UploadUrls
+- [x] UploadUrls
 - [ ] GetExtendedUrls
 
 ### MediaService
 
-- [ ] UploadMedia
+- [x] UploadMedia
 
 ## Overview
 
