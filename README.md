@@ -273,11 +273,4 @@ post, NGINX calls `UploadCreatorWithUserId()` in `user-service`, `UploadText()`
 in `text-service`, `UploadMedia()` in `media-service` and `UploadUniqueID()` in
 `unique-id-service`, each in a separate NGINX thread.
 
-## Mappings
-
-NGINX request URL: `/api/user/register`
-LUA:
-1. `api/user/register.lua`:`RegisterUser()`
-2. `gen-lua/social_network_UserServer.lua`:`UserServiceClient:RegisterUser()`
-Container Service: `user-service` 
 
