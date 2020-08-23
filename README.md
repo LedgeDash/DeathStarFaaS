@@ -186,20 +186,20 @@ an example.
 
 ### ComposePostService
 
-- [x] UploadText()
-- [x] UploadMedia()
-- [x] UploadUniqueId()
-- [x] UploadCreator()
-- [x] UploadUrls()
-- [x] UploadUserMentions()
+- [ ] UploadText()
+- [ ] UploadMedia()
+- [ ] UploadUniqueId()
+- [ ] UploadCreator()
+- [ ] UploadUrls()
+- [ ] UploadUserMentions()
 
 ### UniqueIdService
 
-- [x] UploadUniqueId()
+- [ ] UploadUniqueId()
 
 ### TextService
 
-- [x] UploadText()
+- [ ] UploadText()
 
 ### PostStorageService
 
@@ -218,16 +218,16 @@ an example.
 
 ### UserMentionSerive
 
-- [x] UploadUserMentions
+- [ ] UploadUserMentions
 
 ### UrlShortenService
 
-- [x] UploadUrls
+- [ ] UploadUrls
 - [ ] GetExtendedUrls
 
 ### MediaService
 
-- [x] UploadMedia
+- [ ] UploadMedia
 
 ## Overview
 
