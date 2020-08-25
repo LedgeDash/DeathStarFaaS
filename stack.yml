@@ -52,3 +52,10 @@ functions:
     handler: ./social-graph-follow-with-username
     image: ledgedash/social-graph-follow-with-username:latest
 
+  media-front-upload-media:
+    lang: dockerfile
+    handler: ./media-front-upload-media
+    image: ledgedash/media-front-upload-media:latest
+    environment:
+        BLOB_STORAGE_CONNECTION_STRING: "DefaultEndpointsProtocol=https;AccountName=davidhliu2020sfaas;AccountKey=dNrgfTFfCcINupXC0tnLaDxmkVeFnQhq0cFn8UO+WwOlzYiyLuZSY6bwSmAt4TkehFCkFBuNLgDvTAEBVERPKQ==;EndpointSuffix=core.windows.net"
+
