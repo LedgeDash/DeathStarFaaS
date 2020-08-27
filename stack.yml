@@ -58,4 +58,10 @@ functions:
     image: ledgedash/media-front-upload-media:latest
     environment:
         BLOB_STORAGE_CONNECTION_STRING: "DefaultEndpointsProtocol=https;AccountName=davidhliu2020sfaas;AccountKey=dNrgfTFfCcINupXC0tnLaDxmkVeFnQhq0cFn8UO+WwOlzYiyLuZSY6bwSmAt4TkehFCkFBuNLgDvTAEBVERPKQ==;EndpointSuffix=core.windows.net"
+        CONTAINER_NAME: "deathstar-media"
+
+  compose-post-frontend:
+    lang: python3
+    handler: ./compose-post-frontend
+    image: ledgedash/compose-post-frontend:latest
 
