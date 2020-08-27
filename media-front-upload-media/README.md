@@ -13,3 +13,17 @@ This function is a `dockerfile` type function, not a `python3` type function so
 that we can install the above custom packages and binaries. You can see the
 language type in the OpenFaaS `stack.yaml` file.
 
+# Connection with AZure blob storage
+Blob storage connection string and container name are passed into the function
+as environment variables. You can specify them in the `stack.yaml` file:
+```yaml
+  media-front-upload-media:
+    lang: dockerfile
+    handler: ./media-front-upload-media
+    image: ledgedash/media-front-upload-media:latest
+    environment:
+        BLOB_STORAGE_CONNECTION_STRING: "DefaultEndpointsProtocol=https;AccountName=davidhliu2020sfaas;AccountKey=dNrgfTFfCcINupXC0tnLaDxmkVeFnQhq0cFn8UO+WwOlzYiyLuZSY6bwSmAt4TkehFCkFBuNLgDvTAEBVERPKQ==;EndpointSuffix=core.windows.net"
+        CONTAINER_NAME: "deathstar-media"
+```
+To make DeathStarFaaS work with your AZure blob storage backend, use your own
+connection string and container name.
