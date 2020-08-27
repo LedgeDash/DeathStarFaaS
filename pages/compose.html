@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Compose</title>
+</head>
+
+<body>
+
+
+    <script>
+        const toBase64 = file => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+
+        async function clickEvent() {
+            if (document.getElementById('media').value != "") {
+                var formData = new FormData(document.getElementById('media-form'));
+                var result;
+                var filename;
+                for ([key, value] of formData.entries()) {
+                    if (value instanceof File) {
+                        filename = value.name
+                        result = await toBase64(value).catch(e => Error(e));
+                        if(result instanceof Error) {
+                           console.log('Error: ', result.message);
+                           return;
+                        }
+                    }
+                }
+                //console.log(result)
+                const Http = new XMLHttpRequest();
+                const url = 'http://40.119.49.149:8080/function/media-front-upload-media';
+                
+                Http.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var resp = JSON.parse(Http.responseText);
+                        uploadPost(resp);
+                    }
+                };
+                
+                Http.open("POST", url, true);
+                Http.send(JSON.stringify({ "filename": filename, "file": result }));
+                
+            } else {
+                uploadPost()
+            }
+
+        }
+
+        function uploadPost(media_json) {
+            if (document.getElementById('post_text').value !== "") {
+                const Http = new XMLHttpRequest();
+                const url = 'http://40.119.49.149:8080/function/compose-post-frontend';
+                Http.open("POST", url, true);
+                var body = {"post_type": 0, "text": document.getElementById('post_text').value};
+
+                Http.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log(Http.responseText);
+                    }
+                };
+
+                if (media_json === undefined) {
+                    Http.send(JSON.stringify(body));
+                } else {
+                    body["media_id"] = media_json.media_id;
+                    body["media_type"] = media_json.media_type;
+                    Http.send(JSON.stringify(body));
+                }
+            }
+
+
+        }
+    </script>
+
+    <form id="media-form" method="post" enctype="multipart/form-data">
+        <input type="file" id="media" name="media" accept="image/*">
+        <div></div>
+    </form>
+
+
+    <input type="text" id="post_text" name="text">
+    <div></div>
+    <input type="button" value="submit" onClick="clickEvent();">
+    <div></div>
+
+
+
+</body>
+
+</html>
