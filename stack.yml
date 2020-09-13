@@ -65,3 +65,53 @@ functions:
     handler: ./compose-post-frontend
     image: ledgedash/compose-post-frontend:latest
 
+  user-service-upload-creator-with-user-id:
+    lang: python3
+    handler: ./user-service-upload-creator-with-user-id
+    image: ledgedash/user-service-upload-creator-with-user-id:latest
+
+  compose-post-service-upload-creator:
+    lang: python3
+    handler: ./compose-post-service-upload-creator
+    image: ledgedash/compose-post-service-upload-creator:latest
+
+  unique-id-service-upload-unique-id:
+    lang: python3
+    handler: ./unique-id-service-upload-unique-id
+    image: ledgedash/unique-id-service-upload-unique-id:latest
+
+  media-service-upload-media:
+    lang: python3
+    handler: ./media-service-upload-media
+    image: ledgedash/media-service-upload-media:latest
+
+  text-service-upload-text:
+    lang: python3
+    handler: ./text-service-upload-text
+    image: ledgedash/text-service-upload-text:latest
+
+  compose-post-service-upload-unique-id:
+    lang: python3
+    handler: ./compose-post-service-upload-unique-id
+    image: ledgedash/compose-post-service-upload-unique-id:latest
+
+  compose-post-service-upload-media:
+    lang: python3
+    handler: ./compose-post-service-upload-media
+    image: ledgedash/compose-post-service-upload-media:latest
+
+  compose-post-service-upload-urls:
+    lang: python3
+    handler: ./compose-post-service-upload-urls
+    image: ledgedash/compose-post-service-upload-urls:latest
+
+  compose-post-service-upload-user-mentions:
+    lang: python3
+    handler: ./compose-post-service-upload-user-mentions
+    image: ledgedash/compose-post-service-upload-user-mentions:latest
+
+  compose-post-service-upload-text:
+    lang: python3
+    handler: ./compose-post-service-upload-text
+    image: ledgedash/compose-post-service-upload-text:latest
+
