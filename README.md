@@ -141,16 +141,27 @@ DeathStarFaas functions return JSON strings.
 
 On success, functions return `{"status": "success", "other_fields": ...}`.
 
-On failures, functions return `{"status": "SomeError", "other_fields": ...}`.
+On failures, functions return `{"status": "SomeError", "errors":
+[error_message_objects]}`.
+
 For example, if a username already exists when registering, `register-user`
-function returns `{"status":"UsernameAlreadyExistError", "message": "username
-... already exists"}`.
+function returns `{"status":"UsernameAlreadyExistError", "errors": [{"message":
+"username ... already exists"}]}`. If a function calls other functions and
+those callee functions could each fail independently, the caller returns errors
+from each callee in the `"errors"` array. For example, the
+`compose-post-frontend` function calls 4 other functions. If any of the 4
+functions fail, their error message is stored in the `"errors"` array and
+returned by `compose-post-frontend`.
 
 See individual function's README for more details.
 
-Moreover, DeathStarFaaS functions return HTTP 200 on success and 500 on error.
-200 code is sent by simply calling `return` in python whereas 500 is sent by
+## HTTP Status Code
+
+DeathStarFaaS functions return HTTP 200 on success and 500 on error. 200 code
+is sent by simply calling `return` in python whereas 500 is sent by
 exiting via `sys.exit()`.
+
+## Error Messages
 
 Note that on `sys.exit()`, the OpenFaaS runtime will prefix a string `exit
 status 1\n`. For example, the actually payload of the HTTP response might look
@@ -161,6 +172,12 @@ s = 'exit status 1\n{"status": "UsernameAlreadyExistError", "message": "username
 So to get the actual error responses from DeathStarFaaS functions, you need to
 "clean" the response text a bit. See `test/test_main.py:clean_error_msg()` for
 an example.
+
+Furthermore, if the Python code crashes and dumps traceback messages, those
+messages are returned as strings. If a client calls the function directly, the
+client will receive the traceback messages in the payload of HTTP responses. If
+a function calls the faulting function, the caller function will return the
+callee's traceback message in the `"errors"` array when the caller exits.
 
 # List of DeathStar services and functions
 

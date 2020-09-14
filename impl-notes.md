@@ -1,11 +1,11 @@
 RegisterUserWithId
 additional input: `int64_t user_id`
 
-In RegisterUser, a `int64_t user_id` is generated based on the `_machine_id` of
+In RegisterUser, a `int64_t   user_id` is generated based on the `_machine_id` of
 the machine on which the microservice runs, a counter number and the current
 time stamp of the registration request
 (`int64_t timestamp = duration_cast<milliseconds>(system_clock::now()...)`).
-This seems to be a manual implementation of UUID Version 1 (`uuid.uuid1() function
+This seems to be a manual implementation of UUID Version 1 (`uuid.uuid1()` function
 in Python's uuid package).
 
 ## Uniqueness problem
@@ -109,7 +109,29 @@ fields:
 
 # Mappings
 
+## List of NGINX Routes
+
+1. /api/user/register
+2. /api/user/follow
+3. /api/user/unfollow
+4. /api/user/login
+5. /api/post/compose
+6. /api/user-timeline/read
+7. /api/home-timeline/read
+8. /api/user/get_follower
+9. /api/user/get_followee
+10. /
+11. /wrk2-api/user-timeline/read
+12. /wrk2-api/post/compose
+13. /wrk2-api/user/register
+14. /wrk2-api/user/follow
+15. /wrk2-api/user/unfollow
+
+
+
 Microservice types: `https://github.com/delimitrou/DeathStarBench/blob/master/socialNetwork/gen-cpp/social_network_types.h`
+
+## /api/user/register
 
 NGINX request URL: `/api/user/register`
 LUA:
@@ -159,9 +181,162 @@ creates 4 threads each calls:
                 1. construct a vector<UserMention> user_mentions by querying memcached and mongodb
                 2. compose_post_client->UploadUserMentions(req_id, user_mentions)
                     1. `src/ComposePostService/ComposePostHandler.h`:UploadUserMentions(req_id, vector<UserMention>)
-4. `api/post/compose.lua`:`_UploadUniqueId(req_id, post)`
+4. api/post/compose.lua:_UploadUniqueId(req_id, post)
     1. social_network_UniqueIdService: UploadUniqueId(req_id, tonumber(post.type))
         1. `src/UniqueIdService/UniqueIdHandler.h`:`UploadUniqueId(req_id, PostType::type post_type)`
             compose_post_client->UploadUniqueId(req_id, post_id, post_type)
-            1. `src/ComposePostService/ComposePostHandler.h`:`UploadUniqueId(req_id, post_id, post_type)
+            1. src/ComposePostService/ComposePostHandler.h:UploadUniqueId(req_id, post_id, post_type)
 
+
+
+## compose-post-frontend
+`{"post_type":0,"text":"asdf","media_id":"lofotenIslandsNorway-1fd5f0c1e92147f3baf6cf7e630f763d","media_type":"jpg"}`
+`{"post_type":0,"text":"asdf"}`
+
+There's a  `post_type`. 
+
+It's defined in `socialNetwork/social_network.thrift`, and `socialNetwork/gen-cpp/social_network_types.h`.
+
+In NGINX `compose.lua`, it gets the `user_id` and `username` by :
+
+```lua
+jwt:verify(ngx.shared.config:get("secret"), ngx.var.cookie_login_token)
+```
+
+So I digged into login to see how login (or session cookies) is handled
+
+the `Login()` function in `src/UserService/UserHandler.h` returns:
+
+```c++
+      jwt::jwt_object obj{
+          algorithm("HS256"),
+          secret(_secret),
+          payload({
+              {"user_id", user_id_str},
+              {"username", username},
+              {"timestamp", timestamp_str},
+              {"ttl", "3600"}
+          })
+      };
+      _return = obj.signature();
+```
+
+The JWT library is from: https://github.com/arun11299/cpp-jwt
+
+Here's an intro to JWT: https://jwt.io/introduction/
+
+The actual check at login is a simple hashing of password plus the store salt value.
+
+The recipient of this token is `api/user/login.lua`:
+
+```lua
+local status, ret = pcall(client.Login, client, req_id,
+      args.username, args.password, carrier)
+      
+if not status then
+    ngx.status = ngx.HTTP_INTERNAL_SERVER_ERROR
+    ...
+else
+	ngx.header.content_type = "text/plain"
+    ngx.header["Set-Cookie"] = "login_token=" .. ret .. "; Path=/; Expires="
+        .. ngx.cookie_time(ngx.time() + ngx.shared.config:get("cookie_ttl"))
+    
+    ngx.redirect("../../main.html?username=" .. args.username)
+    ngx.exit(ngx.HTTP_OK)
+end
+```
+
+`ngx.cookie_time()`: https://github.com/openresty/lua-nginx-module#ngxcookie_time
+
+It's not clear what `ngx.header["Set-Cookie"]` does. Specifically, does this return a HTTP response back to the client browser with that header, in which case **the client browser acquires the login token?**
+
+OK, I confirmed with my local DeathStar deployment that the request to login sends a HTTP request with the following header:
+
+```
+Cookie: username-localhost-8888="2|1:0|10:1596559736|23:username-localhost-8888|44:M2FjMzc4M2MxYjRkNDBmNDlhMDM1NjdjMWU4ZTBhOTM=|475c9355ae9ee757b35f35d1405ac3feb6da7a54429a2052cb093308041dbf12"
+```
+
+The actual form data is:
+
+```
+{"username":"dhl","password":"19922008","login":"Login"}
+```
+
+The payload is sent as query string:
+
+```
+username=dhl&password=19922008&login=Login
+```
+
+The response HTTP package has the following header:
+
+```
+Set-Cookie: login_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lc3RhbXAiOiIxNTk4NTgwNzc0IiwidHRsIjoiMzYwMCIsInVzZXJfaWQiOiI0MjQyNzIzMTM2NDIzMzk5NDI0IiwidXNlcm5hbWUiOiJkaGwifQ.3OiDx4tNumxm0wZwUxtnj_pV0ZwSczVSKWrQZiLutLE; Path=/; Expires=Sat, 29-Aug-20 02:12:54 GMT
+```
+
+This login_token is sent in HTTP headers to other APIs. For example in the HTTP request to `get_followees`:
+
+```
+Cookie: username-localhost-8888="2|1:0|10:1596559736|23:username-localhost-8888|44:M2FjMzc4M2MxYjRkNDBmNDlhMDM1NjdjMWU4ZTBhOTM=|475c9355ae9ee757b35f35d1405ac3feb6da7a54429a2052cb093308041dbf12"; login_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aW1lc3RhbXAiOiIxNTk4NTgwNzc0IiwidHRsIjoiMzYwMCIsInVzZXJfaWQiOiI0MjQyNzIzMTM2NDIzMzk5NDI0IiwidXNlcm5hbWUiOiJkaGwifQ.3OiDx4tNumxm0wZwUxtnj_pV0ZwSczVSKWrQZiLutLE
+```
+
+NGINX Lua scripts explicitly check for the the login token:
+
+`api/user/get_follower.lua` and `api/user/get_followee.lua`:
+
+```
+ if (_StrIsEmpty(ngx.var.cookie_login_token)) then
+    ngx.status = ngx.HTTP_UNAUTHORIZED
+    ngx.exit(ngx.HTTP_OK)
+  end
+
+  local login_obj = jwt:verify(ngx.shared.config:get("secret"), ngx.var.cookie_login_token)
+  if not login_obj["verified"] then
+    ngx.status = ngx.HTTP_UNAUTHORIZED
+    ngx.say(login_obj.reason);
+    ngx.exit(ngx.HTTP_OK)
+  end
+
+  local timestamp = tonumber(login_obj["payload"]["timestamp"])
+  local ttl = tonumber(login_obj["payload"]["ttl"])
+  local user_id = tonumber(login_obj["payload"]["user_id"])
+
+  if (timestamp + ttl < ngx.time()) then
+    ngx.status = ngx.HTTP_UNAUTHORIZED
+    ngx.header.content_type = "text/plain"
+    ngx.say("Login token expired, please log in again")
+    ngx.exit(ngx.HTTP_OK)
+  else
+```
+
+Here's an example of what `jwt:verify()` returns: https://github.com/SkyLothar/lua-resty-jwt#sample-of-jwt_obj
+
+### Synchronous vs Asynchronous
+
+microservice calls in the original DeathStar are really synchronous. Even when they use async, they wait for it to finish. So from a client's perspective, it's synchronous. 
+
+
+
+From a client perspective, e2e latency is the same. 
+
+
+
+utilization-wise, if synchronous we should just let compose-post-frontend call compose-and-upload when the other 4 functions are done so that we don't hold up any of the other functions. If async, then there's no waiting at all. utilization will be much better.
+
+Throughput wise, is synchronous waiting will hurt throughput. But even if it's async, the e2e throughput is still the slowest function is it not? **NO! because we can then scale those functions independently!!**
+
+The difference between serverless and microservices in this case is that in microservices, you still need to manage your own pool of services (like a pool of UserServices pods, and you need to call pop and push in your code), but in serverless, you don't. You just call the function and the pushing, popping, resizing are done transparently for you.
+
+A question is resizing pools.
+
+Adaptive Deployment and Resizing for Serverless Applications
+
+# Difference between FaaS and microservices
+
+## Greater number of database connections?
+
+each function instance keeps a pool of connections
+
+### Microservice applications need to manage pools of each service themselves?
+
+Does K8S solves this for them?
