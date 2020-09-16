@@ -38,7 +38,14 @@ def upload_text(req_id, text):
     return ds_util.invoke(function_url, req)
 
 def handle(req):
-    """handle a request to the function
+    """Process the text in a post
+    Extract the user mentions and urls that might appear in the text of a post.
+    Forwards user mentions (a list of username strings) to
+    user-mention-service-upload-user-mentions and the urls (a list of url
+    strings) to url-shorten-service-upload-urls. After
+    url-shorten-service-upload-urls returns shortened urls, replace full urls in
+    the original text with shortened urls and send the new text to
+    compose-post-service-upload-text for uploading.
     Args:
         req (str): a JSON string with the following fields:
             int req_id (128-bit uuid4 integer)
@@ -59,9 +66,7 @@ def handle(req):
     req_id = payload['req_id']
     text = payload['text']
     user_mentions = user_mention_pattern.findall(text)
-    for i in range(0, len(user_mentions)):
-        if user_mentions[i][0] == "@":
-            user_mentions[i] = user_mentions[i][1:]
+    user_mentions = [u[1:] for u in user_mentions if u[0] == "@"]
 
     urls = url_pattern.findall(text)
     url_match_obj_list= list(url_pattern.finditer(text))
@@ -104,21 +109,4 @@ def handle(req):
                 "urls":url_shorten_ret, "text": text})
         else:
             sys.exit(dumps(ret))
-
-    '''
-    function_url = "http://gateway.openfaas:8080/function/compose-post-service-upload-unique-id"
-    ret = ds_util.invoke(function_url, payload)
-
-    if ret['http_status_code'] != 200:
-        sys.exit(json.dumps({"status":"UniqueIdServiceUploadUniqueIdError",
-                             "errors": [ret]}))
-
-    for u in reversed(url_matches_list):
-        prefix =  text[0:u.start()]
-        suffix= text[u.end():]
-        text = prefix+shorter_urls[i]+suffix
-        i=i+1
-
-    '''
-
 

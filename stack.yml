@@ -126,4 +126,6 @@ functions:
     lang: python3
     handler: ./user-mention-service-upload-user-mentions
     image: ledgedash/user-mention-service-upload-user-mentions:latest
+    environment:
+        MONGO_URI: "mongodb://mongo-0.mongo.default"
 
