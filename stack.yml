@@ -115,3 +115,15 @@ functions:
     handler: ./compose-post-service-upload-text
     image: ledgedash/compose-post-service-upload-text:latest
 
+  url-shorten-service-upload-urls:
+    lang: python3
+    handler: ./url-shorten-service-upload-urls
+    image: ledgedash/url-shorten-service-upload-urls:latest
+    environment:
+        MONGO_URI: "mongodb://mongo-0.mongo.default"
+
+  user-mention-service-upload-user-mentions:
+    lang: python3
+    handler: ./user-mention-service-upload-user-mentions
+    image: ledgedash/user-mention-service-upload-user-mentions:latest
+
