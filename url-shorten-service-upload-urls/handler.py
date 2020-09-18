@@ -50,6 +50,9 @@ def compose_post_service_upload_urls(req_id, url_docs):
 def handle(req):
     """Given a list of urls, shorten them, store shortened url in DB and call
     compose-post-service-upload-urls.
+
+    Always call compose-post-service-upload-urls even if the text contains no
+    urls (i.e., the "urls" field in the input JSON string is []).
     Args:
         int req_id (128-bit uuid4 integer)
         urls (list of str): a list of urls to shorten

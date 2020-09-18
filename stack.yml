@@ -70,11 +70,6 @@ functions:
     handler: ./user-service-upload-creator-with-user-id
     image: ledgedash/user-service-upload-creator-with-user-id:latest
 
-  compose-post-service-upload-creator:
-    lang: python3
-    handler: ./compose-post-service-upload-creator
-    image: ledgedash/compose-post-service-upload-creator:latest
-
   unique-id-service-upload-unique-id:
     lang: python3
     handler: ./unique-id-service-upload-unique-id
@@ -90,30 +85,70 @@ functions:
     handler: ./text-service-upload-text
     image: ledgedash/text-service-upload-text:latest
 
+  compose-post-service-upload-creator:
+    lang: python3
+    handler: ./compose-post-service-upload-creator
+    image: ledgedash/compose-post-service-upload-creator:latest
+    environment:
+        REDIS_SERVER: "ds-redis.default"
+        REDIS_PORT: 6379
+        REDIS_EXPIRE_TIMEOUT: 60
+        NUM_COMPONENTS : 6
+
   compose-post-service-upload-unique-id:
     lang: python3
     handler: ./compose-post-service-upload-unique-id
     image: ledgedash/compose-post-service-upload-unique-id:latest
+    environment:
+        REDIS_SERVER: "ds-redis.default"
+        REDIS_PORT: 6379
+        REDIS_EXPIRE_TIMEOUT: 60
+        NUM_COMPONENTS : 6
+
 
   compose-post-service-upload-media:
     lang: python3
     handler: ./compose-post-service-upload-media
     image: ledgedash/compose-post-service-upload-media:latest
+    environment:
+        REDIS_SERVER: "ds-redis.default"
+        REDIS_PORT: 6379
+        REDIS_EXPIRE_TIMEOUT: 60
+        NUM_COMPONENTS : 6
+
 
   compose-post-service-upload-urls:
     lang: python3
     handler: ./compose-post-service-upload-urls
     image: ledgedash/compose-post-service-upload-urls:latest
+    environment:
+        REDIS_SERVER: "ds-redis.default"
+        REDIS_PORT: 6379
+        REDIS_EXPIRE_TIMEOUT: 60
+        NUM_COMPONENTS : 6
+
 
   compose-post-service-upload-user-mentions:
     lang: python3
     handler: ./compose-post-service-upload-user-mentions
     image: ledgedash/compose-post-service-upload-user-mentions:latest
+    environment:
+        REDIS_SERVER: "ds-redis.default"
+        REDIS_PORT: 6379
+        REDIS_EXPIRE_TIMEOUT: 60
+        NUM_COMPONENTS : 6
+
 
   compose-post-service-upload-text:
     lang: python3
     handler: ./compose-post-service-upload-text
     image: ledgedash/compose-post-service-upload-text:latest
+    environment:
+        REDIS_SERVER: "ds-redis.default"
+        REDIS_PORT: 6379
+        REDIS_EXPIRE_TIMEOUT: 60
+        NUM_COMPONENTS : 6
+
 
   url-shorten-service-upload-urls:
     lang: python3
@@ -128,4 +163,9 @@ functions:
     image: ledgedash/user-mention-service-upload-user-mentions:latest
     environment:
         MONGO_URI: "mongodb://mongo-0.mongo.default"
+
+  compose-post-service-compose-and-upload:
+    lang: python3
+    handler: ./compose-post-service-compose-and-upload
+    image: ledgedash/compose-post-service-compose-and-upload:latest
 

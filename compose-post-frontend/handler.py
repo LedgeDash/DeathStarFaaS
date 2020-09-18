@@ -97,6 +97,8 @@ def handle(req):
                 ret["errors"].append(r)
 
         if len(ret["errors"]) == 0:
-            ret={"status":"success"}
-
-        return dumps(ret)
+            ret={"status":"success", "username": payload['username'],
+                    'req_id': req_id}
+            return dumps(ret)
+        else:
+            sys.exit(dumps(ret))

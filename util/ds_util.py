@@ -59,6 +59,6 @@ def clean_error_msg(s):
     "username troubledEagle2 already exist"}\n'
     The beginning `exit status 1\n` and the last \n throws off the json encoder.
     '''
-    return s.split("\n")[1]
+    return s.split('\n')[1]
 
 

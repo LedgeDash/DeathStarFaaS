@@ -26,7 +26,7 @@ def handle(req):
     ret = ds_util.invoke(function_url, payload)
 
     if ret['http_status_code'] != 200:
-        sys.exit(json.dumps({"status":"UploadCreatorError",
+        sys.exit(dumps({"status":"UploadCreatorError",
                              "errors": [ret]}))
 
     return dumps({"status":"success",
