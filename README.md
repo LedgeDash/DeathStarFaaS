@@ -158,6 +158,11 @@ experiments showed that timeouts are around 5s. For example, in the case of
 `compose-post-frontend`, whenever the e2e runtime exceeds 5s, the OpenFaaS
 gateway returns `502` without any error messages from the functions.~
 
+OpenFaaS has a default timeout of 5s for functions. This timeout is independent
+of the gateway timeout (default 20s and was increased to 60 in my test
+deployment). However, if a function timeouts, the error we receive is `502` from
+the gateway with no error messages from the function.
+
 > If we check the gateway deployment, we can see the environment variables
 > for timeouts:
 > 
