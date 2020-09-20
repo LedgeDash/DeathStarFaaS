@@ -1,7 +1,6 @@
-# DeathStar with FaaS
+# DeathStarFaaS
 
-Rewriting the DeathStar Benchmark suite in a Function-as-a-Service (FaaS)
-architecture.
+The DeathStar Benchmark suite in a Function-as-a-Service (FaaS) architecture.
 
 # How to Deploy
 
@@ -28,6 +27,9 @@ can simply deploy the entire DeathStarFaaS application by
 ```bash
 faas-cli up
 ```
+
+See [OpenFaaS workshop](https://github.com/openfaas/workshop/blob/master/lab3.md)
+for more details on deploying applications.
 
 ## Deploy MongoDB
 
@@ -77,7 +79,8 @@ exec`:
 kubectl exec -it mongo-0 -- mongo
 ```
 
-This command will run the mongo shell directly.
+This command will run the mongo shell directly in the primary MongoDB pod
+(`mongo-0`).
 
 Once you're inside the mongo shell, initialize the deployment and add all 3 pods
 to the Replica Set (here we're talking about the MongoDB Replica Set not K8S
@@ -127,6 +130,46 @@ More information on:
    resources](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#stable-network-id)
 
 ### Quick Testing of MongoDB
+
+## Redis
+
+## Specifying MongoDB and Redis URI
+
+Functions that interact with the MongoDB or Redis services obtain the service
+URIs through environment varialbes. We use `MONGO_URI` for MongoDB and `REDIS_SERVER` and `REDIS_PORT` for Redis.
+For example, `user-timeline-service-write-user-timeline` interacts with both
+MongoDB and Redis. Therefore its section in `stack.yml` contains the following
+environment variable definition:
+
+```yaml
+environment:
+    MONGO_URI: "mongodb://mongo-0.mongo.default"
+    REDIS_SERVER: "ds-redis.default"
+    REDIS_PORT: 6379
+```
+## Timeouts
+
+Though according to documentation, the default function timeouts are 20s,
+experiments showed that timeouts are around 5s. For example, in the case of
+`compose-post-frontend`, whenever the e2e runtime exceeds 5s, the OpenFaaS
+gateway returns `502` without any error messages from the functions.
+
+> If we check the gateway deployment, we can see the environment variables
+> for timeouts:
+> 
+> ```
+> kubectl describe deployment/gateway -n openfaas
+> Environment:                   
+> read_timeout:             65s
+> write_timeout:            65s
+> upstream_timeout:         60s
+> ```
+
+Therefore, we manually increase the timeouts to 20s on each function. If you
+face similar issues on your system, consider adjusting the timeouts manually.
+
+## Other configurable options
+
 
 # Testing
 
