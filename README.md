@@ -131,6 +131,10 @@ More information on:
 
 ### Quick Testing of MongoDB
 
+```
+kubectl exec -it mongo-0 -- mongo
+```
+
 ## Redis
 
 ## Specifying MongoDB and Redis URI
@@ -149,10 +153,10 @@ environment:
 ```
 ## Timeouts
 
-Though according to documentation, the default function timeouts are 20s,
+~Though according to documentation, the default function timeouts are 20s,
 experiments showed that timeouts are around 5s. For example, in the case of
 `compose-post-frontend`, whenever the e2e runtime exceeds 5s, the OpenFaaS
-gateway returns `502` without any error messages from the functions.
+gateway returns `502` without any error messages from the functions.~
 
 > If we check the gateway deployment, we can see the environment variables
 > for timeouts:
@@ -167,6 +171,12 @@ gateway returns `502` without any error messages from the functions.
 
 Therefore, we manually increase the timeouts to 20s on each function. If you
 face similar issues on your system, consider adjusting the timeouts manually.
+
+More on OpenFaaS timeouts:
+1. [Timeout chapter in OpenFaaS
+   workshop](https://github.com/openfaas/workshop/blob/master/lab8.md)
+2. [Troubleshooting chapter in the official
+   documentation](https://docs.openfaas.com/deployment/troubleshooting/#timeouts)
 
 ## Other configurable options
 
