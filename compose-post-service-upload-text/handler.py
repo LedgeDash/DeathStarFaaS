@@ -1,4 +1,5 @@
 import json, os, sys
+import traceback
 from bson.json_util import dumps
 import redis
 from function import ds_util
@@ -42,8 +43,8 @@ def handle(req):
     except:
         ret = {"status":"ComposePostServiceUploadTextError",
                "errors":[{"message": "Redis failure",
-                          "exception": sys.exc_info()[1],
-                          "traceback": sys.exc_info()[2]}
+                          "exception": str(sys.exc_info()[1]),
+                          "traceback": traceback.format_exc()}
                         ]}
         sys.exit(dumps(ret))
 

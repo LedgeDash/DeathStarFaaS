@@ -64,26 +64,67 @@ functions:
     lang: python3
     handler: ./compose-post-frontend
     image: ledgedash/compose-post-frontend:latest
+    environment:
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
 
   user-service-upload-creator-with-user-id:
     lang: python3
     handler: ./user-service-upload-creator-with-user-id
     image: ledgedash/user-service-upload-creator-with-user-id:latest
+    environment:
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
 
   unique-id-service-upload-unique-id:
     lang: python3
     handler: ./unique-id-service-upload-unique-id
     image: ledgedash/unique-id-service-upload-unique-id:latest
+    environment:
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
 
   media-service-upload-media:
     lang: python3
     handler: ./media-service-upload-media
     image: ledgedash/media-service-upload-media:latest
+    environment:
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
 
   text-service-upload-text:
     lang: python3
     handler: ./text-service-upload-text
     image: ledgedash/text-service-upload-text:latest
+    environment:
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
+
+  url-shorten-service-upload-urls:
+    lang: python3
+    handler: ./url-shorten-service-upload-urls
+    image: ledgedash/url-shorten-service-upload-urls:latest
+    environment:
+        MONGO_URI: "mongodb://mongo-0.mongo.default"
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
+
+  user-mention-service-upload-user-mentions:
+    lang: python3
+    handler: ./user-mention-service-upload-user-mentions
+    image: ledgedash/user-mention-service-upload-user-mentions:latest
+    environment:
+        MONGO_URI: "mongodb://mongo-0.mongo.default"
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
+
 
   compose-post-service-upload-creator:
     lang: python3
@@ -94,6 +135,9 @@ functions:
         REDIS_PORT: 6379
         REDIS_EXPIRE_TIMEOUT: 60
         NUM_COMPONENTS : 6
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
 
   compose-post-service-upload-unique-id:
     lang: python3
@@ -104,6 +148,9 @@ functions:
         REDIS_PORT: 6379
         REDIS_EXPIRE_TIMEOUT: 60
         NUM_COMPONENTS : 6
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
 
 
   compose-post-service-upload-media:
@@ -115,6 +162,9 @@ functions:
         REDIS_PORT: 6379
         REDIS_EXPIRE_TIMEOUT: 60
         NUM_COMPONENTS : 6
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
 
 
   compose-post-service-upload-urls:
@@ -126,6 +176,9 @@ functions:
         REDIS_PORT: 6379
         REDIS_EXPIRE_TIMEOUT: 60
         NUM_COMPONENTS : 6
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
 
 
   compose-post-service-upload-user-mentions:
@@ -137,6 +190,9 @@ functions:
         REDIS_PORT: 6379
         REDIS_EXPIRE_TIMEOUT: 60
         NUM_COMPONENTS : 6
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
 
 
   compose-post-service-upload-text:
@@ -148,24 +204,55 @@ functions:
         REDIS_PORT: 6379
         REDIS_EXPIRE_TIMEOUT: 60
         NUM_COMPONENTS : 6
-
-
-  url-shorten-service-upload-urls:
-    lang: python3
-    handler: ./url-shorten-service-upload-urls
-    image: ledgedash/url-shorten-service-upload-urls:latest
-    environment:
-        MONGO_URI: "mongodb://mongo-0.mongo.default"
-
-  user-mention-service-upload-user-mentions:
-    lang: python3
-    handler: ./user-mention-service-upload-user-mentions
-    image: ledgedash/user-mention-service-upload-user-mentions:latest
-    environment:
-        MONGO_URI: "mongodb://mongo-0.mongo.default"
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
 
   compose-post-service-compose-and-upload:
     lang: python3
     handler: ./compose-post-service-compose-and-upload
     image: ledgedash/compose-post-service-compose-and-upload:latest
+    environment:
+        REDIS_SERVER: "ds-redis.default"
+        REDIS_PORT: 6379
+        REDIS_EXPIRE_TIMEOUT: 60
+        NUM_COMPONENTS : 6
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
+
+  post-storage-service-store-post:
+    lang: python3
+    handler: ./post-storage-service-store-post
+    image: ledgedash/post-storage-service-store-post:latest
+    environment:
+        MONGO_URI: "mongodb://mongo-0.mongo.default"
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
+
+  post-storage-service-read-post:
+    lang: python3
+    handler: ./post-storage-service-read-post
+    image: ledgedash/post-storage-service-read-post:latest
+    environment:
+        MONGO_URI: "mongodb://mongo-0.mongo.default"
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
+
+  user-timeline-service-write-user-timeline:
+    lang: python3
+    handler: ./user-timeline-service-write-user-timeline
+    image: ledgedash/user-timeline-service-write-user-timeline:latest
+    environment:
+        MONGO_URI: "mongodb://mongo-0.mongo.default"
+        REDIS_SERVER: "ds-redis.default"
+        REDIS_PORT: 6379
+        REDIS_EXPIRE_TIMEOUT: 60
+        NUM_COMPONENTS : 6
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
+
 

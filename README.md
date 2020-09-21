@@ -237,6 +237,12 @@ client will receive the traceback messages in the payload of HTTP responses. If
 a function calls the faulting function, the caller function will return the
 callee's traceback message in the `"errors"` array when the caller exits.
 
+# Data Format
+
+## MongoDB
+
+## Redis
+
 # List of DeathStar services and functions
 
 ### UserService

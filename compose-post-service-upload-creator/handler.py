@@ -1,4 +1,5 @@
 import json, os, sys
+import traceback
 from bson.json_util import dumps
 import redis
 from function import ds_util
@@ -46,12 +47,12 @@ def handle(req):
     except:
         ret = {"status":"ComposePostServiceUploadCreatorError",
                "errors":[{"message": "Redis failure",
-                          "exception": sys.exc_info()[1],
-                          "traceback": sys.exc_info()[2]}
+                          "exception": str(sys.exc_info()[1]),
+                          "traceback": traceback.format_exc()}
                         ]}
         sys.exit(dumps(ret))
 
-    if hlen_reply == os.getenv('NUM_COMPONENTS'):
+    if hlen_reply == int(os.getenv('NUM_COMPONENTS')):
         ret = compose_and_upload(req_id)
         if ret['http_status_code']!= 200:
             sys.exit(dumps({"status":"ComposePostServiceUploadCreatorError", "req_id": req_id_str,

@@ -59,7 +59,7 @@ def handle(req):
             string media_type
     Return:
         on success, return {"status": "success", ...TBD}
-        on error, return {"status": "ComposePostError", "errors": [errors from
+        on error, return {"status": "ComposePostFrontError", "errors": [errors from
         each function call]}
     """
     payload = json.loads(req)
@@ -90,15 +90,15 @@ def handle(req):
 
         results = [f.result() for f in concurrent.futures.as_completed(futures)]
 
-        ret = {"status": "ComposePostError", "errors":[]}
+        ret = {"status": "ComposePostFrontError", "req_id": req_id, "errors":[]}
 
         for r in results:
             if r["http_status_code"] != 200:
                 ret["errors"].append(r)
 
         if len(ret["errors"]) == 0:
-            ret={"status":"success", "username": payload['username'],
-                    'req_id': req_id}
+            ret={"status":"success", "req_id": req_id,
+                    "username": payload['username']}
             return dumps(ret)
         else:
             sys.exit(dumps(ret))

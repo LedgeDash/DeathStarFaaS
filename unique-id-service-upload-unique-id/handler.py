@@ -24,6 +24,7 @@ def handle(req):
 
     post_id= uuid.uuid4().int
 
+    payload['post_id'] = post_id
     function_url = "http://gateway.openfaas:8080/function/compose-post-service-upload-unique-id"
     ret = ds_util.invoke(function_url, payload)
 

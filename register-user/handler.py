@@ -56,7 +56,6 @@ def handle(req):
     new_user_doc['salt'] = salt
     new_user_doc['password'] = h.hexdigest()
 
-    #print('creating new user account: {}'.format(new_user_doc))
     res = users.insert_one(new_user_doc)
 
     # call insertUser function in the social graph service
