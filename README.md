@@ -9,41 +9,31 @@ and Kubernetes. You need a Kubernetes cluster, install on it OpenFaaS and other
 services (e.g., MongoDB) and then install DeathStarFaaS to the OpenFaaS
 deployment.
 
-## Getting started with OpenFaaS
+## Install OpenFaaS
+
 The current implementation is tested on
-[AKS](https://docs.microsoft.com/en-us/azure/aks/). Follow AKS' guide for
-installing OpenFaaS: https://docs.microsoft.com/en-us/azure/aks/openfaas
+[AKS](https://docs.microsoft.com/en-us/azure/aks/). Follow [AKS' guide on
+installing OpenFaaS](https://docs.microsoft.com/en-us/azure/aks/openfaas)
 
-To learn more about using OpenFaaS, checkout their
+To learn more about using OpenFaaS, check out their
 [workshop](https://github.com/openfaas/workshop).
-
-## Installing DeathStarFaaS
-
-All functions of DeathStarFaaS are specified in the `stack.yml` file. Therefore,
-after logging in to your OpenFaaS deployment through the CLI client
-(`faas-cli`) and navigating to the same directory as the `stack.yml` file, you
-can simply deploy the entire DeathStarFaaS application by
-
-```bash
-faas-cli up
-```
-
-See [OpenFaaS workshop](https://github.com/openfaas/workshop/blob/master/lab3.md)
-for more details on deploying applications.
 
 ## Deploy MongoDB
 
 ### Kubernetes Setup
+
 DeathStarFaaS uses MongoDB for persistent storage. One option is to deploy a
 MongoDB instance on the same Kubernetes cluster as your OpenFaaS deployment. We
-provide the necessary config files to deploy MongoDB on AKS.
+provide the necessary config files to deploy MongoDB on AKS. See
+`aks/mongodb-k8s.yaml` and `aks/azure-storageclass.yaml`.
 
 Simply use `kubectl apply` or `kubectl create` to deploy it. This will create
 three things:
-1. A StorageClass resource that dynamically creates a AZure File so that we can
-   later create PersistentVolumeClaims off of it and use them for our MongoDB Pods.
+1. A StorageClass resource that dynamically creates a AZure File off of which we
+   can later create PersistentVolumeClaims for MongoDB Pods.
 2. A StatefulSet named "mongo" with 3 replicas. This will create 3 Pods with
-   names `mongo-0`, `mongo-1` and `mongo-2`.
+   names `mongo-0`, `mongo-1` and `mongo-2`. You don't have to use 3 replicas or
+   any replication at all.
 3. A Headless Service (type: `ClusterIP`) exposing the MongoDB pods to other
    pods inside the cluster.
 
@@ -65,11 +55,12 @@ For more information:
    StatefulSet](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)
 
 If you're using a different cloud provider, adapt the config files so that it
-works on your platform. 
+works on your platform. Most likely, you'll need to change at least the
+StorageClass resource because it's cloud-provider-specific.
 
 ### Initialize MongoDB
 
-After all MongoDB pods get into the RUNNING status, we can initialize the
+After all MongoDB pods get into the `Running` status, we can initialize the
 MongoDB deployment.
 
 Get a shell into one of the mongo pods (we use `mongo-0` here) by `kubectl
@@ -83,8 +74,8 @@ This command will run the mongo shell directly in the primary MongoDB pod
 (`mongo-0`).
 
 Once you're inside the mongo shell, initialize the deployment and add all 3 pods
-to the Replica Set (here we're talking about the MongoDB Replica Set not K8S
-ReplicaSet)
+to the Replica Set (here we're talking about the MongoDB Replica Set not the K8S
+ReplicaSet):
 
 
 ```bash
@@ -131,19 +122,39 @@ More information on:
 
 ### Quick Testing of MongoDB
 
+You can get a Mongo shell into the pod running the master MongoDB replica. In
+our case, it is pod `mongo-0`:
+
 ```
 kubectl exec -it mongo-0 -- mongo
 ```
 
 ## Redis
 
-## Specifying MongoDB and Redis URI
+Similarly we provide a K8s resource config file for deploying a Redis instance on K8s.
+See `aks/redis-k8s.yaml`.
+
+## Deploy DeathStarFaaS
+
+`stack.yml` contains OpenFaaS specifications for all functions in DeathStarFaaS.
+After [logging in to your OpenFaaS deployment through the CLI
+client](https://docs.microsoft.com/en-us/azure/aks/openfaas#deploy-openfaas)
+(`faas-cli`) and navigating to the same directory as the `stack.yml` file, you
+can simply deploy the entire DeathStarFaaS application by `faas-cli up`.
+`faas-cli up` is a shortcut for building, uploading and deploying all functions
+defined in a `stack.yml` file in the current directory.
+
+See this [OpenFaaS workshop](https://github.com/openfaas/workshop/blob/master/lab3.md)
+for more details on deploying applications.
+
+### Specifying MongoDB and Redis URI
 
 Functions that interact with the MongoDB or Redis services obtain the service
-URIs through environment varialbes. We use `MONGO_URI` for MongoDB and `REDIS_SERVER` and `REDIS_PORT` for Redis.
-For example, `user-timeline-service-write-user-timeline` interacts with both
-MongoDB and Redis. Therefore its section in `stack.yml` contains the following
-environment variable definition:
+URIs through environment varialbes. We use `MONGO_URI` for MongoDB and
+`REDIS_SERVER` and `REDIS_PORT` for Redis.  For example,
+`user-timeline-service-write-user-timeline` interacts with both MongoDB and
+Redis. Therefore its section in `stack.yml` contains the following environment
+variable definition:
 
 ```yaml
 environment:
@@ -151,7 +162,10 @@ environment:
     REDIS_SERVER: "ds-redis.default"
     REDIS_PORT: 6379
 ```
-## Timeouts
+
+Modify the URIs based on your configuration.
+
+### Timeouts
 
 ~Though according to documentation, the default function timeouts are 20s,
 experiments showed that timeouts are around 5s. For example, in the case of
@@ -182,9 +196,6 @@ More on OpenFaaS timeouts:
    workshop](https://github.com/openfaas/workshop/blob/master/lab8.md)
 2. [Troubleshooting chapter in the official
    documentation](https://docs.openfaas.com/deployment/troubleshooting/#timeouts)
-
-## Other configurable options
-
 
 # Testing
 
