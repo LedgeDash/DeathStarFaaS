@@ -243,6 +243,16 @@ callee's traceback message in the `"errors"` array when the caller exits.
 
 ## Redis
 
+# List of frontend APIs
+
+1. /user/unfollow
+2. /user/follow
+3. /user/register
+4. /post/compose
+5. /user-timeline/read
+6. /home-timeline/read
+
+
 # List of DeathStar services and functions
 
 ### UserService
@@ -267,24 +277,24 @@ callee's traceback message in the `"errors"` array when the caller exits.
 
 ### ComposePostService
 
-- [ ] UploadText()
-- [ ] UploadMedia()
-- [ ] UploadUniqueId()
-- [ ] UploadCreator()
-- [ ] UploadUrls()
-- [ ] UploadUserMentions()
+- [x] UploadText()
+- [x] UploadMedia()
+- [x] UploadUniqueId()
+- [x] UploadCreator()
+- [x] UploadUrls()
+- [x] UploadUserMentions()
 
 ### UniqueIdService
 
-- [ ] UploadUniqueId()
+- [x] UploadUniqueId()
 
 ### TextService
 
-- [ ] UploadText()
+- [x] UploadText()
 
 ### PostStorageService
 
-- [ ] StorePost
+- [x] StorePost
 - [ ] ReadPost
 - [ ] ReadPosts
 
@@ -295,20 +305,20 @@ callee's traceback message in the `"errors"` array when the caller exits.
 ### UserTimelineService
 
 - [ ] ReadUserTimeline
-- [ ] WriteUserTimeline
+- [x] WriteUserTimeline
 
 ### UserMentionSerive
 
-- [ ] UploadUserMentions
+- [x] UploadUserMentions
 
 ### UrlShortenService
 
-- [ ] UploadUrls
+- [x] UploadUrls
 - [ ] GetExtendedUrls
 
 ### MediaService
 
-- [ ] UploadMedia
+- [x] UploadMedia
 
 ## Overview
 

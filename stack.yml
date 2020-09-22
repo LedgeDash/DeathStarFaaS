@@ -231,12 +231,15 @@ functions:
         write_timeout: 20s
         exec_timeout: 20s
 
-  post-storage-service-read-post:
+  post-storage-service-read-posts:
     lang: python3
-    handler: ./post-storage-service-read-post
-    image: ledgedash/post-storage-service-read-post:latest
+    handler: ./post-storage-service-read-posts
+    image: ledgedash/post-storage-service-read-posts:latests
     environment:
         MONGO_URI: "mongodb://mongo-0.mongo.default"
+        REDIS_SERVER: "ds-redis.default"
+        REDIS_PORT: 6379
+        REDIS_EXPIRE_TIMEOUT: 60
         read_timeout: 20s
         write_timeout: 20s
         exec_timeout: 20s
@@ -254,5 +257,4 @@ functions:
         read_timeout: 20s
         write_timeout: 20s
         exec_timeout: 20s
-
 
