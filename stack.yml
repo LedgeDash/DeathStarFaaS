@@ -258,3 +258,22 @@ functions:
         write_timeout: 20s
         exec_timeout: 20s
 
+  user-timeline-service-read-user-timeline:
+    lang: python3
+    handler: ./user-timeline-service-read-user-timeline
+    image: ledgedash/user-timeline-service-read-user-timeline:latest
+    environment:
+        MONGO_URI: "mongodb://mongo-0.mongo.default"
+        REDIS_SERVER: "ds-redis.default"
+        REDIS_PORT: 6379
+        REDIS_EXPIRE_TIMEOUT: 60
+        NUM_COMPONENTS : 6
+        read_timeout: 20s
+        write_timeout: 20s
+        exec_timeout: 20s
+
+  user-timeline-read-frontend:
+    lang: python3
+    handler: ./user-timeline-read-frontend
+    image: ledgedash/user-timeline-read-frontend:latest
+

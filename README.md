@@ -262,7 +262,7 @@ callee's traceback message in the `"errors"` array when the caller exits.
 - [ ] Login()
 - [x] GetUserId()
 - [x] UploadCreatorWithUserId()
-- [ ] ~UploadCreaterWithUsername()~
+- [x] ~UploadCreaterWithUsername()~
 
 ### SocialGraphService
 
@@ -295,16 +295,16 @@ callee's traceback message in the `"errors"` array when the caller exits.
 ### PostStorageService
 
 - [x] StorePost
-- [ ] ~ReadPost~
-- [ ] ReadPosts
+- [x] ~ReadPost~
+- [x] ReadPosts
 
 ### HomeTimelineService
 
-- [ ] ~ReadHomeTimeline~
+- [x] ~ReadHomeTimeline~
 
 ### UserTimelineService
 
-- [ ] ReadUserTimeline
+- [x] ReadUserTimeline
 - [x] WriteUserTimeline
 
 ### UserMentionSerive
