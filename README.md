@@ -262,7 +262,7 @@ callee's traceback message in the `"errors"` array when the caller exits.
 - [ ] Login()
 - [x] GetUserId()
 - [x] UploadCreatorWithUserId()
-- [ ] UploadCreaterWithUsername()
+~- [ ] UploadCreaterWithUsername()~
 
 ### SocialGraphService
 
@@ -295,12 +295,12 @@ callee's traceback message in the `"errors"` array when the caller exits.
 ### PostStorageService
 
 - [x] StorePost
-- [ ] ReadPost
+~- [ ] ReadPost~
 - [ ] ReadPosts
 
 ### HomeTimelineService
 
-- [ ] ReadHomeTimeline
+~- [ ] ReadHomeTimeline~
 
 ### UserTimelineService
 
@@ -319,6 +319,21 @@ callee's traceback message in the `"errors"` array when the caller exits.
 ### MediaService
 
 - [x] UploadMedia
+
+
+**Notes:**
+
+1. `UserTimelineService:ReadUserTimeline()` and
+`HomeTimelineService:ReadHomeTimeline()` have identical functionalities. The
+original DeathStar only actually uses `HomeTimelineService:ReadHomeTimeline()`
+even to read timeline of users other than the currently-logged-in user.
+Therefore, we only implement `UserTimelineService:ReadUserTimeline()`.
+   1. In the future, if we want to add permissions to posts (e.g., only viewable
+      by followers), we can augment `ReadUserTimeline()`'s interface to include
+      the `user_id` of the caller.
+2. In PostStorageService, `ReadPosts()` subsumes `ReadPost(). Therefore, we only
+   implement `ReadPosts()`. The original DeathStar only actually uses
+   `ReadPosts()`.
 
 ## Overview
 
