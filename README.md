@@ -321,13 +321,13 @@ DB: `users`
 Collection: `users`
 
 Format:
-```json
+```
 {
-    "username": "username_str"
-    "user_id": "uuid4_hex_str"
-    "first_name": "first_name_str"
-    "last_name": "last_name_str"
-    "salt": "random_32_character_str"
+    "username": "username_str",
+    "user_id": "uuid4_hex_str",
+    "first_name": "first_name_str",
+    "last_name": "last_name_str",
+    "salt": "random_32_character_str",
     "password": "hash_of_user_password_and_salt"
 }
 ```
@@ -341,10 +341,10 @@ DB: `social_graph`
 Collectoin: `social_graph`
 
 Format:
-```json
+```
 {
-    "user_id": "user_id"
-    "followers: ["user_ids"]
+    "user_id": "user_id",
+    "followers: ["user_ids"],
     "followees: ["user_ids"]
 }
 ```
@@ -358,9 +358,9 @@ DB: `url_shorten`
 Collection: `url_shorten`
 
 Format:
-```json
+```
 {
-    "expanded_url": "url_string"
+    "expanded_url": "url_string",
     "shortened_url": "url_string"
 }
 ```
@@ -374,7 +374,7 @@ DB: `post`
 Collection: `post`
 
 Format:
-```json
+```
 {
     "req_id": "uuid_str",
     "post_id": "uuid_str",
