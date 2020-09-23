@@ -217,6 +217,8 @@ For more details, see `/test/README.md`.
 
 ## Original DeathStar
 
+[Architecture graph](docs/DeathStarOriginal.pdf)
+
 The original DeathStar has the following architecture:
 
 The frontend are two NGINX webservers serving client-facing APIs via HTTP endpoints.
@@ -252,6 +254,8 @@ all APIs of the microservice.
 
 ## DeathStarFaaS
 
+[Architecture graph](docs/DeathStarFaaS.pdf)
+
 There are no webservers in DeathStarFaaS. Instead, each HTTP endpoint is
 replaced by an OpenFaaS function. For example, the original `/api/post/compose`
 endpoint is now the `compose-post-front` function which is accessible at
@@ -268,7 +272,10 @@ Functions call each other via HTTP requests.
 
 ## Function Interface
 
-DeathStarFaas functions return JSON strings.
+Inputs and outputs to DeathStarFaas functions are JSON strings.
+
+Each function expects JSON inputs with particular fields. See comments in
+`handler.py` of each function for details.
 
 On success, functions return `{"status": "success", "other_fields": ...}`.
 
