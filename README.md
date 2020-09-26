@@ -262,6 +262,10 @@ endpoint is now the `compose-post-front` function which is accessible at
 `http://<openfaas-url>/function/compose-post-front`. You invoke the function by
 sending HTTP requests with JSON payload.
 
+The `ds-net` function implements a simple web frontend for the social network
+app. `ds-net` serves static webpages. You can access the function the same way
+you access a website.
+
 There are no microservices either in DeathStarFaaS. Instead, each microservice
 is replaced by a set of functions each of which implements an API of the
 original microservice. For example, there are now 2 functions

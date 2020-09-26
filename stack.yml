@@ -7,15 +7,6 @@ functions:
     lang: python3
     handler: ./register-user
     image: ledgedash/register-user:latest
-  social-graph-insert-user:
-    lang: python3
-    handler: ./social-graph-insert-user
-    image: ledgedash/social-graph-insert-user:latest
-
-  social-graph-follow:
-    lang: python3
-    handler: ./social-graph-follow
-    image: ledgedash/social-graph-follow:latest
 
   register-user-with-id:
     lang: python3
@@ -26,6 +17,21 @@ functions:
     lang: python3
     handler: ./get-user-id
     image: ledgedash/get-user-id:latest
+
+  user-service-login:
+    lang: python3
+    handler: ./user-service-login
+    image: ledgedash/user-service-login:latest
+
+  social-graph-insert-user:
+    lang: python3
+    handler: ./social-graph-insert-user
+    image: ledgedash/social-graph-insert-user:latest
+
+  social-graph-follow:
+    lang: python3
+    handler: ./social-graph-follow
+    image: ledgedash/social-graph-follow:latest
 
   social-graph-get-followers:
     lang: python3
@@ -194,7 +200,6 @@ functions:
         write_timeout: 20s
         exec_timeout: 20s
 
-
   compose-post-service-upload-text:
     lang: python3
     handler: ./compose-post-service-upload-text
@@ -276,4 +281,9 @@ functions:
     lang: python3
     handler: ./user-timeline-read-frontend
     image: ledgedash/user-timeline-read-frontend:latest
+
+  ds-net:
+    lang: dockerfile
+    handler: ./ds-net
+    image: ledgedash/ds-net:latest
 
